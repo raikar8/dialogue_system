@@ -29,22 +29,7 @@ chatbot = Chatbot(config={
 
 q = queue.Queue()
 
-def ask_chat_gpt(token, prompt):
-    global gpt_response
-    chat = Chatbot(token, "https://gpt.pawan.krd")
     
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(chat.wait_for_ready())
-    response = loop.run_until_complete(chat.ask(prompt))
-    chat.close()
-    loop.stop()
-    
-    gpt_response = response['answer']
-
-    return
-    
-
 def int_or_str(text):
     """Helper function for argument parsing."""
     try:
@@ -81,6 +66,10 @@ parser.add_argument(
 parser.add_argument(
     "-m", "--model", type=str, help="language model; e.g. en-us, fr, nl; default is en-us")
 args = parser.parse_args(remaining)
+
+
+
+
 
 try:
     if args.samplerate is None:
@@ -152,20 +141,5 @@ try:
             #print(prev_text)
     print()
     
-    
-    
-    
-   
-    
-              
-    
-except KeyboardInterrupt:
-    #output = json.loads(rec.FinalResult())
-
-    
-
-    print("\nDone")
-    print(final_output)
-    parser.exit(0)
 except Exception as e:
     parser.exit(type(e).__name__ + ": " + str(e))
