@@ -123,6 +123,7 @@ try:
     
     #print(final_output)
     
+    ######################### STT output is stored in final_output and passed to a deepmultilingualpunctuation model to get Punctutations right ######################################
     result = model_punc.restore_punctuation(final_output)
     #print(result)
     
@@ -130,7 +131,7 @@ try:
     print("Aditya: {0}".format(result))
     #asyncio.coroutine(ask_chat_gpt(token, result))
     
-    
+    ######################### After getting a Punctuation output, you need to pass the result into the ChatGPT ######################################
     prev_text = ""
 
     for data in chatbot.ask(result):
@@ -141,5 +142,6 @@ try:
             #print(prev_text)
     print()
     
+
 except Exception as e:
     parser.exit(type(e).__name__ + ": " + str(e))
