@@ -1,0 +1,9 @@
+PyAudio==0.2.13
+pycparser==2.21
+PySocks==1.7.1
+python-engineio==4.3.4
+python-socketio==5.7.2
+vosk==0.3.45
+revChatGPT
+deepmultilingualpunctuation
+
