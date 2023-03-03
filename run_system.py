@@ -10,6 +10,17 @@ import sys
 import sounddevice as sd
 import json
 import asyncio
+
+import simpleaudio as sa
+import numpy as np
+
+from TTS.api import TTS
+
+model_name = TTS.list_models()[0]
+
+tts = TTS(model_name)
+
+
 #from punctuator import Punctuator
 #p = Punctuator('model.pcl')
 
@@ -23,11 +34,19 @@ from vosk import Model, KaldiRecognizer
 #from chatgpt_wrapper import ChatGPT
 
 chatbot = Chatbot(config={
-  "email": "example_mail@gmail.com",
+  "email": "example@gmail.com",
   "password": "password"
 })
 
 q = queue.Queue()
+
+def np_array_to_sound(text, fs, TTS_model):
+	wav = TTS_model.tts(str(text), speaker=TTS_model.speakers[0], language=TTS_model.languages[0])
+	wav = np.array(wav)
+	audio = wav * (2**15 - 1) / np.max(np.abs(wav))
+	audio = audio.astype(np.int16)
+	play_obj = sa.play_buffer(audio, 1, 2, fs)
+	play_obj.wait_done()
 
     
 def int_or_str(text):
@@ -135,13 +154,17 @@ try:
     prev_text = ""
 
     for data in chatbot.ask(result):
-            message = data["message"][len(prev_text) :]
-            #print(message)
-            print(message, end="", flush=True)
-            prev_text = data["message"]
+            response = data["message"]
+            #message = data["message"][len(prev_text) :]
+            #print(str(message))
+            #wav = tts.tts(str(message), speaker=tts.speakers[0], language=tts.languages[0])
+            #np_array_to_sound(message,16000,tts)
+            #print(message, end="", flush=True)
+            #prev_text = data["message"]
             #print(prev_text)
-    print()
+    #print()
     
+    np_array_to_sound(str(response),16000,tts)
 
 except Exception as e:
     parser.exit(type(e).__name__ + ": " + str(e))
